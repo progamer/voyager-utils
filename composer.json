@@ -1,0 +1,30 @@
+{
+    "name": "codept/core",
+    "description": "Core features build by codept team",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "issa",
+            "email": "issa.mh.khalil@gmail.com"
+        }
+    ],
+    "require": {},
+
+    "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
+        "classmap": [],
+        "psr-4": {
+            "Codept\\Core\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Codept\\Core\\CoreServiceProvider"
+            ]
+        }
+    }
+}
