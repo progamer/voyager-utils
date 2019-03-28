@@ -4,27 +4,27 @@
     @case('tel')
     @case('email')
 
-        <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
-            <label for="{{$name}}">{{$title[session('locale', 'ar')]}}</label>
-            <input
-                    id="{{$name}}" 
-                    
-                    @if(isset($order)) tabindex="{{$order}}"  @endif
+    <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
+        <label for="{{$name}}">{{$title[session('locale', 'ar')]}}</label>
+        <input
+                id="{{$name}}"
 
-                    name="{{$name}}" type="{{$type}}" class="form-control"
-                    @if(isset($validation['required']) && $validation['required'])required="required" @endif
+                @if(isset($order)) tabindex="{{$order}}"  @endif
 
-                    @if(isset($value))value="{{$value}}" @endif
-                    @if(isset($placeholder)) placeholder="{{$placeholder[session('locale', 'ar')]}}"  @endif
-                    >
-        </div>
+                name="{{$name}}" type="{{$type}}" class="form-control"
+                @if(isset($validation['required']) && $validation['required'])required="required" @endif
+
+                @if(isset($value))value="{{$value}}" @endif
+                @if(isset($placeholder)) placeholder="{{$placeholder[session('locale', 'ar')]}}"  @endif
+        >
+    </div>
     @break
 
     @case('select')
     <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
         <label for="{{$name}}">{{$title[session('locale', 'ar')]}}</label>
-        <select 
-            @if(isset($order)) tabindex="{{$order}}"  @endif
+        <select
+                @if(isset($order)) tabindex="{{$order}}"  @endif
         class="form-control" id="{{$name}}" name="{{$name}}[]"
                 @if(isset($validation['required']) && $validation['required'])required="required" @endif>
             @foreach( $options as $option )
@@ -37,22 +37,23 @@
     @break
 
     @case('boolean')
-        <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
-            <div class="custom-control custom-checkbox mt-3 mb-4">
-                <input 
-                @if(isset($order)) tabindex="{{$order}}"  @endif
-                type="checkbox" class="custom-control-input" name="{{$name}}" id="{{$name}}" value="1"
-                       @if(isset($validation['required']) && $validation['required'])required="required"@endif
-                >
-                <label class="custom-control-label f-14" for="{{$name}}">{{$title[session('locale', 'ar')]}}</label>
-            </div>
+    <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
+        <div class="custom-control custom-checkbox mt-3 mb-4">
+            <input
+                    @if(isset($order)) tabindex="{{$order}}"  @endif
+            type="checkbox" class="custom-control-input" name="{{$name}}" id="{{$name}}" value="1"
+                    @if(isset($validation['required']) && $validation['required'])required="required"@endif
+                    @if(isset($value) and $value == 1) checked="checked"  @endif
+            >
+            <label class="custom-control-label f-14" for="{{$name}}">{{$title[session('locale', 'ar')]}}</label>
         </div>
+    </div>
     @break
 
     @case('header')
-        <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
-            <p class="pt-2">{{$title[session('locale', 'ar')]}}</p>
-        </div>
+    <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
+        <p class="pt-2">{{$title[session('locale', 'ar')]}}</p>
+    </div>
     @break
     @default
 @endswitch
