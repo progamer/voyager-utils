@@ -7,19 +7,25 @@
         <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
             <label for="{{$name}}">{{$title[session('locale', 'ar')]}}</label>
             <input
-                    id="{{$name}}" tabindex="{{$order}}" name="{{$name}}" type="{{$type}}" class="form-control"
+                    id="{{$name}}" 
+                    
+                    @if(isset($order)) tabindex="{{$order}}"  @endif
+
+                    name="{{$name}}" type="{{$type}}" class="form-control"
                     @if(isset($validation['required']) && $validation['required'])required="required" @endif
 
                     @if(isset($value))value="{{$value}}" @endif
-
-                    placeholder="{{$placeholder[session('locale', 'ar')]}}">
+                    @if(isset($placeholder)) placeholder="{{$placeholder[session('locale', 'ar')]}}"  @endif
+                    >
         </div>
     @break
 
     @case('select')
     <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
         <label for="{{$name}}">{{$title[session('locale', 'ar')]}}</label>
-        <select tabindex="{{$order}}" class="form-control" id="{{$name}}" name="{{$name}}[]"
+        <select 
+            @if(isset($order)) tabindex="{{$order}}"  @endif
+        class="form-control" id="{{$name}}" name="{{$name}}[]"
                 @if(isset($validation['required']) && $validation['required'])required="required" @endif>
             @foreach( $options as $option )
                 <option value="{{$option['value']}}" @if(isset($value) and in_array($option['value'], $value )) selected=selected @endif>
@@ -33,7 +39,9 @@
     @case('boolean')
         <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
             <div class="custom-control custom-checkbox mt-3 mb-4">
-                <input tabindex="{{$order}}" type="checkbox" class="custom-control-input" name="{{$name}}" id="{{$name}}" value="1"
+                <input 
+                @if(isset($order)) tabindex="{{$order}}"  @endif
+                type="checkbox" class="custom-control-input" name="{{$name}}" id="{{$name}}" value="1"
                        @if(isset($validation['required']) && $validation['required'])required="required"@endif
                 >
                 <label class="custom-control-label f-14" for="{{$name}}">{{$title[session('locale', 'ar')]}}</label>
