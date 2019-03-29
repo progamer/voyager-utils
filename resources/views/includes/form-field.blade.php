@@ -56,7 +56,7 @@
                     @if(isset($order)) tabindex="{{$order}}"  @endif
 
                     name="{{$name}}[]" type="{{$type}}" class="form-control"
-                    @if(isset($validation['required']) && $validation['required'])required="required" @endif
+                    {{--@if(isset($validation['required']) && $validation['required'])required="required" @endif--}}
                     @if(isset($placeholder)) placeholder="{{$placeholder[session('locale', 'ar')]}}"  @endif
             >
 
