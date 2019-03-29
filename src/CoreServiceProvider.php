@@ -7,6 +7,7 @@ use Codept\Core\Commands\GoogleTranslateCommand;
 use Codept\Core\Commands\ImportLanguageFilesCommand;
 use Codept\Core\Commands\ScanApplicationCommand;
 use Codept\Core\FormFields\JsonFormField;
+use Codept\Core\FormFields\StatusField;
 use Codept\Core\FormFields\TranslationFormField;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
@@ -46,6 +47,7 @@ class CoreServiceProvider extends ServiceProvider
 
         Voyager::addFormField(TranslationFormField::class);
         Voyager::addFormField(JsonFormField::class);
+        Voyager::addFormField(StatusField::class);
 
         Blade::include('codept/core::includes.input', 'input');
         Blade::include('codept/core::includes.form-field', 'formField');

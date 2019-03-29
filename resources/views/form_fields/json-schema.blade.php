@@ -6,7 +6,7 @@
 
 
 <div class="row">
-    @foreach($schema->sortBy('order')->whereNotIn('name', ['header', 'agree'])->whereNotIn('type', ['header', 'agree']) as $field)
+    @foreach($schema->sortBy('order')->whereNotIn('name', ['header', 'agree'])->whereNotIn('type', ['header', 'agree', 'password']) as $field)
         @php
             $field['value'] = $values->get($field['name'])
         @endphp

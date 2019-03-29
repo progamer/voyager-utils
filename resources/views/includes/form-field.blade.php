@@ -3,6 +3,7 @@
     @case('numeric')
     @case('tel')
     @case('email')
+    @case('password')
 
     <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
         <label for="{{$name}}">{{$title[session('locale', 'ar')]}}</label>
@@ -18,6 +19,51 @@
                 @if(isset($placeholder)) placeholder="{{$placeholder[session('locale', 'ar')]}}"  @endif
         >
     </div>
+    @break
+
+    @case('file')
+
+    <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
+
+        <div class=" input-group col-md-12">
+            <label class="custom-file-label" for="{{$name}}">{{$title[session('locale', 'ar')]}}</label>
+
+            @if(isset($value))
+                <table class="table table-hover">
+                    @foreach($value as $index => $file)
+                        <tr class="list-unstyled">
+                            <td>
+                                <div class="">
+                                    <div class="col-md-10">
+                                        <a target="_blank" href="{{Voyager::image($file['download_link'])}}">{{$file['original_name']}}</a><br>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a class="btn btn-small btn-danger" href="{{route("applications.files.destroy", ['application' => $dataTypeContent , 'field' => $name, 'index' => $index])}}">{{__("Delete")}}</a>
+                                    </div>
+                                </div>
+                            </td>
+
+                        </tr>
+                    @endforeach
+                </table>
+            @endif
+            <input
+                    id="{{$name}}"
+                    class="custom-file-input"
+
+                    @if(isset($attrs) && isset($attrs['type']))  accept="{{$attrs['type']}}" @endif
+                    @if(isset($attrs) && isset($attrs['multiple']))  multiple @endif
+                    @if(isset($order)) tabindex="{{$order}}"  @endif
+
+                    name="{{$name}}[]" type="{{$type}}" class="form-control"
+                    @if(isset($validation['required']) && $validation['required'])required="required" @endif
+                    @if(isset($placeholder)) placeholder="{{$placeholder[session('locale', 'ar')]}}"  @endif
+            >
+
+        </div>
+
+    </div>
+
     @break
 
     @case('select')
