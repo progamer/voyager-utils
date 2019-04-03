@@ -4,15 +4,19 @@
     @case('tel')
     @case('email')
     @case('password')
+    @case('date')
 
-    <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
+
+
+
+    <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif @if(isset($validation) && isset($validation['required']) && $validation['required']) required @endif">
         <label for="{{$name}}">{{$title[session('locale', 'ar')]}}</label>
         <input
                 id="{{$name}}"
 
                 @if(isset($order)) tabindex="{{$order}}"  @endif
 
-                name="{{$name}}" type="{{$type}}" class="form-control"
+                name="{{$name}}" type="{{$type=='numeric'? 'number' : $type}}" class="form-control"
                 @if(isset($validation['required']) && $validation['required'])required="required" @endif
 
                 @if(isset($value))value="{{$value}}" @endif
@@ -23,7 +27,7 @@
 
     @case('file')
 
-    <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
+    <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif @if(isset($validation) && isset($validation['required']) && $validation['required']) required @endif">
 
         <div class=" input-group col-md-12">
             <label class="custom-file-label" for="{{$name}}">{{$title[session('locale', 'ar')]}}</label>
@@ -67,7 +71,7 @@
     @break
 
     @case('select')
-    <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
+    <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif @if(isset($validation) && isset($validation['required']) && $validation['required']) required @endif">
         <label for="{{$name}}">{{$title[session('locale', 'ar')]}}</label>
         <select
                 @if(isset($order)) tabindex="{{$order}}"  @endif
@@ -83,7 +87,7 @@
     @break
 
     @case('boolean')
-    <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
+    <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif ">
         <div class="custom-control custom-checkbox mt-3 mb-4">
             <input
                     @if(isset($order)) tabindex="{{$order}}"  @endif
