@@ -9,7 +9,7 @@
         <div class="form-group @if(isset($display['width']))col-md-{{$display['width']}}@endif">
             <label for="{{$name}}">{{$title[session('locale', 'ar')]}}</label>
             <div>
-                {{$value}}
+                {{$value ?? ''}}
             </div>
         </div>
     @break
