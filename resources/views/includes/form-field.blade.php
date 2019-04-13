@@ -16,7 +16,12 @@
 
                 @if(isset($order)) tabindex="{{$order}}"  @endif
 
-                name="{{$name}}" type="{{$type=='numeric'? 'number' : $type}}" class="form-control"
+                name="{{$name}}"
+
+                @if($type == 'numeric')
+                step="any"
+                @endif
+                type="{{$type=='numeric'? 'number' : $type}}" class="form-control"
                 @if(isset($validation['required']) && $validation['required'])required="required" @endif
 
                 @if(isset($value))value="{{$value}}" @endif
