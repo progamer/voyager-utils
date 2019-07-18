@@ -7,6 +7,7 @@ use Codept\Core\Models\WorkflowLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 use Workflow;
 
@@ -34,6 +35,18 @@ class WorkflowController extends VoyagerBaseController
         $transition = $request->get('transition');
         $comment = $request->get('comment');
 
+        $document_uploaded = $request->file('document_file');
+        $document_name = $document_uploaded->getClientOriginalName();
+
+        $storePath = storage_path('app'.DIRECTORY_SEPARATOR.'clientRequest\\');
+
+        $download_link = $storePath.$document_name;
+        $download_link = str_replace('\\',"\\\\",$download_link);
+
+        Storage::disk('local')->put('/clientRequest/'.$document_name,file_get_contents($document_uploaded->getRealPath()));
+
+
+
         $obj = app($class)->findOrFail($id);
 
         $this->authorize($workflowName.'_'.$transition, $obj);
@@ -41,7 +54,7 @@ class WorkflowController extends VoyagerBaseController
         $workflow = Workflow::get($obj, $workflowName);
         if($workflow->can( $obj, $transition)){
 
-            $obj = DB::transaction(function () use($workflow, $obj, $transition,$workflowName, $comment){
+            $obj = DB::transaction(function () use($workflow, $obj, $transition,$workflowName, $comment,$download_link,$document_name){
                 $workflow->apply( $obj, $transition);
                 $obj->save();
 
@@ -50,6 +63,7 @@ class WorkflowController extends VoyagerBaseController
                     'workflow' => $workflowName,
                     'transition' => $transition,
                     'comment' => $comment,
+                    'attachments' => '[{"download_link":"/clientRequests/'.$download_link.'","original_name":"'.$document_name.'"}]'
                 ]);
                 return $obj;
             });
