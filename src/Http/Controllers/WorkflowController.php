@@ -38,12 +38,12 @@ class WorkflowController extends VoyagerBaseController
         $document_uploaded = $request->file('document_file');
         $document_name = $document_uploaded->getClientOriginalName();
 
-        $storePath = storage_path('app'.DIRECTORY_SEPARATOR.'clientRequest\\');
+        $storePath = storage_path('app'.DIRECTORY_SEPARATOR);
 
         $download_link = $storePath.$document_name;
-        $download_link = str_replace('\\',"\\\\",$download_link);
 
-        Storage::disk('local')->put('/clientRequest/'.$document_name,file_get_contents($document_uploaded->getRealPath()));
+
+        Storage::put('clientRequest'.DIRECTORY_SEPARATOR.$document_name,file_get_contents($document_uploaded->getRealPath()));
 
 
 
@@ -63,10 +63,14 @@ class WorkflowController extends VoyagerBaseController
                     'workflow' => $workflowName,
                     'transition' => $transition,
                     'comment' => $comment,
-                    'attachments' => '[{"download_link":"/clientRequests/'.$download_link.'","original_name":"'.$document_name.'"}]'
+                    'attachments' => [
+                        'download_link' => $download_link,
+                        'original_name' => $document_name
+                    ]
                 ]);
                 return $obj;
             });
+
 
             return CoreWorkflow::getRedirect($workflowName, $transition)->with([
                 'message' =>  CoreWorkflow::getMessage($workflowName, $transition, 'success'),
