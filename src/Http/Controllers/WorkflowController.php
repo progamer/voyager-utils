@@ -7,6 +7,7 @@ use Codept\Core\Models\WorkflowLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 use Workflow;
 
@@ -39,9 +40,20 @@ class WorkflowController extends VoyagerBaseController
         $this->authorize($workflowName.'_'.$transition, $obj);
 
         $workflow = Workflow::get($obj, $workflowName);
+
+
+        $attachments = [];
+        $document_uploaded = $request->file('document_file');
+        foreach ($document_uploaded as $document){
+           $document_name = $document->getClientOriginalName();
+           Storage::put('clientRequest'.DIRECTORY_SEPARATOR.$document_name,file_get_contents($document->getRealPath()));
+           array_push($attachments, '{"download_link":"'.$document_name.'","original_name":"'.$document_name.'"}');
+        }
+
+
         if($workflow->can( $obj, $transition)){
 
-            $obj = DB::transaction(function () use($workflow, $obj, $transition,$workflowName, $comment){
+            $obj = DB::transaction(function () use($workflow, $obj, $transition,$workflowName, $comment,$attachments){
                 $workflow->apply( $obj, $transition);
                 $obj->save();
 
@@ -50,6 +62,7 @@ class WorkflowController extends VoyagerBaseController
                     'workflow' => $workflowName,
                     'transition' => $transition,
                     'comment' => $comment,
+                    'attachments' => implode(" , ",$attachments),
                 ]);
 
                 activity()
