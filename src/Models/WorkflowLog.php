@@ -7,10 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class WorkflowLog extends Model
 {
 
-    protected $casts = [
-        'attachments' => 'array'
-    ];
-
     protected $fillable = ['user_id','workflowable_id', 'workflowable_type', 'workflow', 'transition', 'comment', 'attachments'];
 
     public function workflowable()

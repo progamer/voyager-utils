@@ -35,42 +35,45 @@ class WorkflowController extends VoyagerBaseController
         $transition = $request->get('transition');
         $comment = $request->get('comment');
 
-        $document_uploaded = $request->file('document_file');
-        $document_name = $document_uploaded->getClientOriginalName();
-
-        $storePath = storage_path('app'.DIRECTORY_SEPARATOR);
-
-        $download_link = $storePath.$document_name;
-
-
-        Storage::put('clientRequest'.DIRECTORY_SEPARATOR.$document_name,file_get_contents($document_uploaded->getRealPath()));
-
-
-
         $obj = app($class)->findOrFail($id);
 
         $this->authorize($workflowName.'_'.$transition, $obj);
 
         $workflow = Workflow::get($obj, $workflowName);
+
+
+        $attachments = [];
+        $document_uploaded = $request->file('document_file');
+        foreach ($document_uploaded as $document){
+           $document_name = $document->getClientOriginalName();
+           Storage::put('clientRequest'.DIRECTORY_SEPARATOR.$document_name,file_get_contents($document->getRealPath()));
+           array_push($attachments, '{"download_link":"'.$document_name.'","original_name":"'.$document_name.'"}');
+        }
+
+
         if($workflow->can( $obj, $transition)){
 
-            $obj = DB::transaction(function () use($workflow, $obj, $transition,$workflowName, $comment,$download_link,$document_name){
+            $obj = DB::transaction(function () use($workflow, $obj, $transition,$workflowName, $comment,$attachments){
                 $workflow->apply( $obj, $transition);
                 $obj->save();
 
-                $obj->workflowLogs()->create([
+                $logs = $obj->workflowLogs()->create([
                     'user_id' => Auth::user()->id,
                     'workflow' => $workflowName,
                     'transition' => $transition,
                     'comment' => $comment,
-                    'attachments' => [
-                        'download_link' => $download_link,
-                        'original_name' => $document_name
-                    ]
+                    'attachments' => implode(" , ",$attachments),
                 ]);
+
+                activity()
+                    ->performedOn($obj)
+                    ->causedBy(\Auth::user())
+                    ->withProperties($logs)
+                    ->log(':subject.title has been :properties.transition by :causer.name');
+
+
                 return $obj;
             });
-
 
             return CoreWorkflow::getRedirect($workflowName, $transition)->with([
                 'message' =>  CoreWorkflow::getMessage($workflowName, $transition, 'success'),
