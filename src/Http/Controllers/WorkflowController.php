@@ -45,12 +45,20 @@ class WorkflowController extends VoyagerBaseController
                 $workflow->apply( $obj, $transition);
                 $obj->save();
 
-                $obj->workflowLogs()->create([
+                $logs = $obj->workflowLogs()->create([
                     'user_id' => Auth::user()->id,
                     'workflow' => $workflowName,
                     'transition' => $transition,
                     'comment' => $comment,
                 ]);
+
+                activity()
+                    ->performedOn($obj)
+                    ->causedBy(\Auth::user())
+                    ->withProperties($logs)
+                    ->log(':subject.title has been :properties.transition by :causer.name');
+
+
                 return $obj;
             });
 
