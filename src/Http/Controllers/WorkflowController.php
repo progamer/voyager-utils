@@ -41,13 +41,14 @@ class WorkflowController extends VoyagerBaseController
 
         $workflow = Workflow::get($obj, $workflowName);
 
-
         $attachments = [];
         $document_uploaded = $request->file('document_file');
-        foreach ($document_uploaded as $document){
-           $document_name = $document->getClientOriginalName();
-           Storage::put('clientRequest'.DIRECTORY_SEPARATOR.$document_name,file_get_contents($document->getRealPath()));
-           array_push($attachments, '{"download_link":"'.$document_name.'","original_name":"'.$document_name.'"}');
+        if ($document_uploaded != null) {
+            foreach ($document_uploaded as $document) {
+                $document_name = $document->getClientOriginalName();
+                Storage::put('clientRequest' . DIRECTORY_SEPARATOR . $document_name, file_get_contents($document->getRealPath()));
+                array_push($attachments, '{"download_link":"' . $document_name . '","original_name":"' . $document_name . '"}');
+            }
         }
 
 
@@ -62,7 +63,7 @@ class WorkflowController extends VoyagerBaseController
                     'workflow' => $workflowName,
                     'transition' => $transition,
                     'comment' => $comment,
-                    'attachments' => implode(" , ",$attachments),
+                    'attachments' => count($attachments) > 0 ? implode(" , ",$attachments) : null,
                 ]);
 
                 activity()
