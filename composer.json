@@ -3,6 +3,7 @@
     "description": "Core features build by codept team",
     "type": "project",
     "license": "MIT",
+    "version": "1.0",
     "authors": [
         {
             "name": "issa",
